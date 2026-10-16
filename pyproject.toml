@@ -1,0 +1,18 @@
+[build-system]
+requires = []
+build-backend = "build_backend"
+backend-path = ["."]
+
+[project]
+name = "kinesift"
+version = "0.2.0"
+description = "Host-side container observations and resettable agent task checks"
+readme = "README.md"
+requires-python = ">=3.10"
+dependencies = []
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{name = "Kinesift Team", email = "hello@kinesift.com"}]
+
+[project.scripts]
+kinesift = "kinesift.cli:main"

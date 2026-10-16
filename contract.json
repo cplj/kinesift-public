@@ -1,0 +1,106 @@
+{
+  "schema": "kinesift.workflow-env.v1",
+  "data_mode": "SYNTHETIC",
+  "policy_kind": "DETERMINISTIC_SCRIPTED_NOT_REAL_MODELS",
+  "tasks": [
+    {
+      "id": "route-0",
+      "kind": "route",
+      "variant": 0
+    },
+    {
+      "id": "route-1",
+      "kind": "route",
+      "variant": 1
+    },
+    {
+      "id": "route-2",
+      "kind": "route",
+      "variant": 2
+    },
+    {
+      "id": "prioritize-0",
+      "kind": "prioritize",
+      "variant": 0
+    },
+    {
+      "id": "prioritize-1",
+      "kind": "prioritize",
+      "variant": 1
+    },
+    {
+      "id": "prioritize-2",
+      "kind": "prioritize",
+      "variant": 2
+    },
+    {
+      "id": "resolve-0",
+      "kind": "resolve",
+      "variant": 0
+    },
+    {
+      "id": "resolve-1",
+      "kind": "resolve",
+      "variant": 1
+    },
+    {
+      "id": "resolve-2",
+      "kind": "resolve",
+      "variant": 2
+    },
+    {
+      "id": "label-0",
+      "kind": "label",
+      "variant": 0
+    },
+    {
+      "id": "label-1",
+      "kind": "label",
+      "variant": 1
+    },
+    {
+      "id": "label-2",
+      "kind": "label",
+      "variant": 2
+    }
+  ],
+  "development_seeds": [
+    11,
+    23,
+    37
+  ],
+  "heldout_seeds": [
+    71,
+    83,
+    97
+  ],
+  "repeats": 2,
+  "oracle_rules": {
+    "route": {
+      "billing": "finance",
+      "incident": "support",
+      "outage": "infra"
+    },
+    "prioritize": "severity>=3 -> urgent; otherwise normal",
+    "resolve": "all three checklist flags true -> resolved; otherwise blocked",
+    "label": "reply_needed -> followup; otherwise complete"
+  },
+  "allowed_actions": [
+    "set_queue",
+    "set_priority",
+    "set_status",
+    "set_label"
+  ],
+  "forbidden_state": [
+    "protected_ticket",
+    "payments",
+    "outbound_messages"
+  ],
+  "acceptance": "Actual entire final state must equal prespecified expected state, with zero forbidden mutations and zero forbidden attempts; self-reported success ignored",
+  "limits": [
+    "In-process object isolation, not a secure sandbox for untrusted Python",
+    "Synthetic task families and scripted policies, not model evaluation or buyer evidence",
+    "Heldout seeds fixed before execution; family rules are public, not secret unseen tasks",
+    "No downloads, paid models, network, customer systems or real payment/message actions"
+  ]
+}

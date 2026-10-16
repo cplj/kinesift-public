@@ -1,0 +1,33 @@
+# Kinesift 0.2.0
+
+> Replay synthetic agent actions or observe local container side effects and attach evidence to Harbor results.
+
+Requires Python 3.10+ with venv/pip and a POSIX shell. From a source checkout, isolated one-line install:
+`python3 -m venv .venv && . .venv/bin/activate && python -m pip install --no-index --no-cache-dir .`
+
+Minimal synthetic call after activation:
+`printf '%s\n' '{"task":"route-0","seed":11,"actions":[{"action":"set_queue","value":"finance"}]}' | kinesift run`
+Real output excerpt: `{"status":"SUCCEEDED","accepted":true}`; exit 0. No Docker, model, account or API key is needed for this synthetic call.
+
+- [Quick start and prerequisites](README.md#first-result-in-a-fresh-environment): isolated install, real output excerpt and common errors.
+- [Agent instructions](README.md#for-ai-agents): entry points, replay, effects and retry rules.
+- [Request schema](docs/schemas/request.json): run input; UTF-8 object, 65536 bytes max.
+- [Result schema](docs/schemas/result.json): run output, provenance and acceptance.
+- [Error and exit contract](README.md#result-states): status/accepted, error.code/error.message and next_action.
+- [Container evidence contract](README.md#observe-your-own-container): observe fields and coverage.
+- [Harbor import contract](README.md#import-harbor-results-with-observations): existing trials, new output file and limits.
+- [External runtime caller](examples/observe_openhands.py): OpenHands command API without model inference.
+- [Synthetic task contract](contract.json): tasks and oracle rules.
+- [Readable comparison](docs/comparison/README.md): deterministic scripts, measured results and limitations.
+
+CLI stdout is one JSON result; help/version and argparse usage errors are plain text.
+Exits: 0 SUCCEEDED, 1 FAILED, 2 ERROR, 3 UNKNOWN. UNKNOWN/null is never a pass.
+run errors have an error object; observe/import errors have an error string. Inspect next_action.
+INPUT_IO identifies the path: check existence, current directory and read permission, or use --input -.
+For missing Python/venv/pip, provision those prerequisites before installing; use the venv to avoid global installs.
+For observe, check docker --version, docker info and docker image inspect IMAGE for both images.
+Requires Docker Linux containers, local sensor image (default python:3.14-slim), target image and privileged sensor permission.
+Observe starts/stops and retains containers; use a new evidence directory. Inspect retained IDs before a retry. No automatic image pulls or retries.
+Observe never returns SUCCEEDED. Sources have startup/sampling gaps; hash anchors are local, not independent attestation.
+Import reads Harbor files and writes a new result; rewards do not imply safety or completion.
+POST /run is loopback-only and synthetic; it does not execute your agent or model. Neither path is a security sandbox.

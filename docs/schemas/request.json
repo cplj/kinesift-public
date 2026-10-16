@@ -1,0 +1,59 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Kinesift run request",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "task"
+  ],
+  "properties": {
+    "task": {
+      "type": "string",
+      "enum": [
+        "route-0",
+        "route-1",
+        "route-2",
+        "prioritize-0",
+        "prioritize-1",
+        "prioritize-2",
+        "resolve-0",
+        "resolve-1",
+        "resolve-2",
+        "label-0",
+        "label-1",
+        "label-2"
+      ]
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647,
+      "default": 11,
+      "description": "The runtime requires an integer JSON literal without decimal point or exponent; boolean values are rejected. A JSON Schema validator may treat numerically integral decimals as integers, so also enforce this lexical restriction."
+    },
+    "actions": {
+      "type": "array",
+      "maxItems": 128,
+      "items": {
+        "type": "object",
+        "required": [
+          "action",
+          "value"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "value": {
+            "type": "string",
+            "maxLength": 256
+          }
+        }
+      }
+    }
+  },
+  "description": "One UTF-8 JSON object, at most 65536 bytes. Duplicate keys and non-finite numbers are rejected before schema validation. Omit actions to observe; an empty array evaluates a no-op attempt."
+}

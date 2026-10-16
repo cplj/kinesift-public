@@ -1,0 +1,142 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Kinesift local API",
+    "version": "0.2.0",
+    "license": {
+      "name": "Apache-2.0",
+      "identifier": "Apache-2.0"
+    },
+    "contact": {
+      "name": "Kinesift Team",
+      "email": "hello@kinesift.com"
+    }
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8765",
+      "description": "Local single-user development only."
+    }
+  ],
+  "paths": {
+    "/run": {
+      "post": {
+        "operationId": "evaluate",
+        "summary": "Reset and replay a synthetic ticket task.",
+        "description": "Requires one Content-Length and application/json. No chunked transfer. Body limit 65536 bytes; five-second inactivity timeout, not an absolute deadline. Duplicate keys and non-finite numbers are rejected. Omit actions for UNKNOWN observation mode.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "./docs/schemas/request.json"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Evaluated result or observation only; inspect status and accepted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid input, JSON or framing.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Unknown endpoint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          },
+          "405": {
+            "description": "Unsupported method, when returned by the HTTP implementation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          },
+          "408": {
+            "description": "Request body inactivity timeout.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          },
+          "411": {
+            "description": "Content-Length is required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          },
+          "413": {
+            "description": "Body exceeds 65536 bytes.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Content-Type must be application/json.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Evaluation interrupted; UNKNOWN.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          },
+          "501": {
+            "description": "Unsupported HTTP method.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "./docs/schemas/result.json"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

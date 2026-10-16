@@ -1,0 +1,227 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Kinesift run result",
+  "type": "object",
+  "required": [
+    "schema",
+    "version",
+    "data_mode",
+    "status",
+    "accepted",
+    "contract_sha256"
+  ],
+  "properties": {
+    "schema": {
+      "const": "kinesift.run.v1"
+    },
+    "version": {
+      "const": "0.2.0"
+    },
+    "data_mode": {
+      "const": "SYNTHETIC"
+    },
+    "status": {
+      "enum": [
+        "SUCCEEDED",
+        "FAILED",
+        "UNKNOWN",
+        "ERROR"
+      ]
+    },
+    "accepted": {
+      "type": [
+        "boolean",
+        "null"
+      ]
+    },
+    "contract_sha256": {
+      "type": "string",
+      "pattern": "^[a-f0-9]{64}$"
+    },
+    "task": {
+      "type": "string"
+    },
+    "seed": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 2147483647,
+      "default": 11
+    },
+    "observation": {
+      "type": "object",
+      "required": [
+        "task",
+        "ticket"
+      ],
+      "properties": {
+        "task": {
+          "type": "object"
+        },
+        "ticket": {
+          "type": "object"
+        }
+      }
+    },
+    "final_observation": {
+      "type": "object"
+    },
+    "transitions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "ok"
+        ],
+        "properties": {
+          "ok": {
+            "type": "boolean"
+          },
+          "reason": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "required": [
+        "task_state_exact",
+        "forbidden_mutations",
+        "forbidden_attempts",
+        "accepted"
+      ],
+      "properties": {
+        "task_state_exact": {
+          "type": "boolean"
+        },
+        "forbidden_mutations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "forbidden_attempts": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "accepted": {
+          "type": "boolean"
+        }
+      }
+    },
+    "reason": {
+      "enum": [
+        "OBSERVATION_ONLY",
+        "EVALUATION_INTERRUPTED"
+      ]
+    },
+    "next_action": {
+      "type": "string"
+    },
+    "error": {
+      "type": "object",
+      "required": [
+        "code",
+        "message"
+      ],
+      "properties": {
+        "code": {
+          "type": "string"
+        },
+        "message": {
+          "type": "string"
+        }
+      }
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "SUCCEEDED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "accepted": {
+            "const": true
+          }
+        },
+        "required": [
+          "task",
+          "seed",
+          "observation",
+          "final_observation",
+          "transitions",
+          "verification"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "FAILED"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "accepted": {
+            "const": false
+          }
+        },
+        "required": [
+          "task",
+          "seed",
+          "observation",
+          "final_observation",
+          "transitions",
+          "verification"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "UNKNOWN"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "accepted": {
+            "const": null
+          }
+        },
+        "required": [
+          "reason",
+          "next_action"
+        ]
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ERROR"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "accepted": {
+            "const": null
+          }
+        },
+        "required": [
+          "error",
+          "next_action"
+        ]
+      }
+    }
+  ]
+}
