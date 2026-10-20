@@ -1,3 +1,5 @@
+> Truquence is the main project. This repository remains the observation module entry point. See [Truquence](https://github.com/cplj/truquence-public) and the existing package instructions below.
+
 # Kinesift 0.2.0
 
 Check whether an agent reached the expected state and what side effects were observed: replay synthetic ticket actions or observe a local container from the host.
