@@ -27,7 +27,7 @@ def json_value(rng, depth=0):
         return children if rng.randrange(2) else {str(n): v for n, v in enumerate(children)}
     return rng.choice([None, True, False, rng.randint(-2**53, 2**53),
                        rng.uniform(-1e100, 1e100),
-                       ''.join(rng.choices('abc"\\\n\x00é漢🙂', k=rng.randrange(65)))])
+                       ''.join(rng.choices('abc"\\\n\x00é\u6f22🙂', k=rng.randrange(65)))])
 
 
 class ParserProperties(unittest.TestCase):
@@ -49,7 +49,7 @@ class ParserProperties(unittest.TestCase):
             request = {'task': rng.choice(list(TASKS)), 'seed': rng.randrange(2**31)}
             if case % 3:
                 request['actions'] = [{'action': rng.choice(['set_queue', 'set_status', 'send_message']),
-                                       'value': rng.choice(['finance', 'resolved', '', '漢🙂'])}
+                                       'value': rng.choice(['finance', 'resolved', '', '\u6f22🙂'])}
                                       for _ in range(rng.randrange(8))]
             compact = json.dumps(request, separators=(',', ':')).encode()
             reordered = json.dumps(dict(reversed(list(request.items()))), indent=2,
@@ -111,7 +111,7 @@ class ParserProperties(unittest.TestCase):
     def test_docker_command_tokens_and_rejected_options(self):
         rng = random.Random(SEED + 4)
         for case in range(CASES):
-            payload = ['local-image', 'echo', str(rng.randrange(2**31)), '漢🙂']
+            payload = ['local-image', 'echo', str(rng.randrange(2**31)), '\u6f22🙂']
             command = ['docker', 'run', '--network=none', *payload]
             with self.subTest(seed=SEED + 4, case=case):
                 self.assertEqual(validate_command(command), command[2:])
