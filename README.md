@@ -1,4 +1,4 @@
-> This repository is the observation module entry point for [Truquence](https://github.com/cplj/truquence-public). Install the main package from [PyPI: truquence](https://pypi.org/project/truquence/).
+> Kinesift was developed as part of the [Truquence](https://github.com/cplj/truquence-public) project (PyPI: [truquence](https://pypi.org/project/truquence/)).
 
 # Kinesift 0.2.0
 
