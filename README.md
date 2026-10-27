@@ -6,8 +6,8 @@ Check whether an agent reached the expected state and what side effects were obs
 
 ## First result in a fresh environment
 
-Requires Python 3.10+ with `venv` and `pip`, and a POSIX shell. From the source
-checkout (`product/` in the development tree), install in an isolated environment:
+Requires Python 3.10+ with `venv` and `pip`, and a POSIX shell. From a checkout of this
+repository, install in an isolated environment:
 
 ```sh
 python3 -m venv .venv && . .venv/bin/activate && python -m pip install --no-index --no-cache-dir .
@@ -355,7 +355,7 @@ Use a running local Docker daemon and a locally available `python:3.14-slim`
 base image. Verify the base exists with `docker image inspect python:3.14-slim`;
 if it is missing, stop and provision it separately before an offline build.
 There is no registry login, pull command, model download or cloud deployment in
-this workflow. From this `product/` directory:
+this workflow. From the repository root:
 
 ```sh
 docker build --pull=false --network=none -t kinesift:0.2.0 .
@@ -384,7 +384,7 @@ printf '%s\n' '{"task":"route-0","seed":11,"actions":[{"action":"set_queue","val
 ```
 
 The image installs the product during build and runs as an unprivileged numeric
-user. `.dockerignore` and explicit `COPY` sources allow only product/build files;
+user. `.dockerignore` and explicit `COPY` sources allow only the files the build needs;
 no credentials, customer data, host mounts, environment file or secrets are used.
 Build `RUN` steps have no networking or package-index dependency. The product
 makes no external calls at runtime. The API example uses Docker's local bridge
@@ -407,7 +407,7 @@ attachment and fail-closed behavior, installed CLI, HTTP JSON transport, all tas
 UNKNOWN, bounds, repeated resets, forbidden attempts, state tampering and the
 existing scripted benchmark on both seed splits. No models or paid services run.
 `ci/github-actions.yml` is an example: copy it to `.github/workflows/kinesift.yml`
-in a repository where `product/` is at the root. It is provided locally only.
+in a repository where these files are at the root. It is provided locally only.
 
 The existing scripted benchmark remains available as `python -m kinesift.run
 --split development --output /tmp/NEW_KINESIFT_RESULT.json` (choose a new output
