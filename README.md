@@ -2,6 +2,8 @@
 
 # Kinesift 0.2.0
 
+> **Maintenance mode.** This project is not actively developed. Issues and pull requests may not receive a response.
+
 Check whether an agent reached the expected state and what side effects were observed: replay synthetic ticket actions or observe a local container from the host.
 
 ## First result in a fresh environment
